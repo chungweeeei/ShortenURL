@@ -1,0 +1,6 @@
+POST http://localhost:80/v1/shorten
+Content-Type: application/json
+
+{
+    "url": "https://en.wikipedia.org/wiki/Robot"
+}

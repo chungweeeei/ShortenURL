@@ -38,3 +38,18 @@ services:
       - "5540:5540"
     depends_on:
       - redis
+
+  url-service:
+    container_name: url-service
+    image: url:dev
+    restart: always
+    stdin_open: true
+    tty: true
+    ports:
+      - "3000:80"
+    env_file:
+      - ./backend/url-service/config/app.env
+    depends_on:
+      - postgres
+      - redis
+    command: ["./main"]

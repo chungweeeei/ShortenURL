@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"gorm.io/driver/postgres"
@@ -23,7 +24,11 @@ func initDB() *gorm.DB {
 
 func ensureDatabaseExists() {
 
-	dsn := "host=localhost user=root password=root dbname=postgres sslmode=disable timezone=UTC connect_timeout=5"
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=postgres sslmode=disable timezone=UTC connect_timeout=5",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -35,14 +40,14 @@ func ensureDatabaseExists() {
 	sqlDB, _ := db.DB()
 	defer sqlDB.Close()
 
-	err = db.Raw("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = 'URLs')").Scan(&exists).Error
+	err = db.Raw(fmt.Sprintf("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = '%s')", os.Getenv("DB_DATABASE"))).Scan(&exists).Error
 	if err != nil {
 		log.Printf("Failed to check database existence: %v", err)
 		return
 	}
 
 	if !exists {
-		err = db.Exec("CREATE DATABASE \"URLs\"").Error
+		err = db.Exec(fmt.Sprintf("CREATE DATABASE \"%s\"", os.Getenv("DB_DATABASE"))).Error
 		if err != nil {
 			log.Printf("Failed to create database: %v", err)
 		} else {
@@ -57,8 +62,12 @@ func connectToDB() *gorm.DB {
 
 	count := 0
 
-	dsn := "host=localhost user=root password=root dbname=URLs sslmode=disable timezone=UTC connect_timeout=5"
-
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable timezone=UTC connect_timeout=5",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_DATABASE"),
+	)
 	for {
 		connection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {

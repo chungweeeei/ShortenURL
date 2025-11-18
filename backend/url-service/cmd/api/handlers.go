@@ -29,7 +29,7 @@ func (app *Config) ShortenURL(c *gin.Context) {
 	existingURL, _ := app.Model.URL.GetByOriginalURL(request.URL)
 	if existingURL != nil {
 		c.JSON(http.StatusCreated, gin.H{
-			"short_url": fmt.Sprintf("http://localhost:%s/%s", serverPort, existingURL.ShortCode),
+			"short_url": fmt.Sprintf("http://localhost:%s/%s", forwardingPort, existingURL.ShortCode),
 			"message":   "URL shortened successfully.",
 		})
 		return
@@ -78,7 +78,7 @@ func (app *Config) ShortenURL(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"short_url": fmt.Sprintf("http://localhost:%s/%s", serverPort, IdResponse.ShortURL),
+		"short_url": fmt.Sprintf("http://localhost:%s/%s", forwardingPort, IdResponse.ShortURL),
 		"message":   "URL shortened successfully.",
 	})
 }

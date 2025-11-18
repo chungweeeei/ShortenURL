@@ -15,7 +15,7 @@ export type generateURLResponse = {
 export async function generateShortURL({ request }: { request: generateURLRequest }){
 
     const response = await axios.post(
-        "http://localhost:80/v1/shorten",
+        "http://localhost:3000/v1/shorten",
         {
             url: request.url
         },

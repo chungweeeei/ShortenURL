@@ -1,0 +1,4 @@
+# Using a variable (Rest Client style):
+@shortId = iff5ImenPq
+GET http://localhost:3000/v1/shortURL/{{shortId}}
+Content-Type: application/json

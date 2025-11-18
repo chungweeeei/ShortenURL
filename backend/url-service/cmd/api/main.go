@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	serverPort = "80"
+	serverPort     = "80"
+	forwardingPort = "3000"
 )
 
 func main() {
